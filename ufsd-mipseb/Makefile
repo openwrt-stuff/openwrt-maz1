@@ -48,7 +48,8 @@ MAKEOPTS:= -C $(LINUX_DIR) \
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
-	$(CP) -r src-3.18/. $(PKG_BUILD_DIR)
+	echo $(LINUX_DIR)|grep 3.18 && cp -r src-3.18/. $(PKG_BUILD_DIR) || cp -r src-4.0/. $(PKG_BUILD_DIR)
+	#$(CP) -r src-3.18/. $(PKG_BUILD_DIR)
 endef
 
 
