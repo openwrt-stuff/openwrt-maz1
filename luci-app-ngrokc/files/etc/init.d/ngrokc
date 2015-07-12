@@ -33,7 +33,7 @@ list_tunnels() {
     echo $server" : ngrokc "$SERVER_PARAMS $TUNNEL_PARAMS
     (busybox ps|grep "/usr/bin/ngrokc"|grep -v grep|grep `cat /tmp/ngrokc/${1}.pid`) || \
     #exec $STDBUF /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>/dev/null 1>/tmp/ngrokc/${1}.log & 
-    exec $STDBUF /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>&1 >/dev/null &
+    exec /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>&1 >/dev/null &
     echo $! > /tmp/ngrokc/${1}.pid
   fi
 }
@@ -44,7 +44,7 @@ get_servarg() {
 
 start() {
 	mkdir -p /tmp/ngrokc
-	 [ -f /usr/lib/coreutils/libstdbuf.so ] && STDBUF="stdbuf -oL " || STDBUF=""
+	# [ -f /usr/lib/coreutils/libstdbuf.so ] && STDBUF="stdbuf -oL " || STDBUF=""
 	config_load 'ngrokc'
 	config_foreach list_servers 'servers'
 	config_foreach list_tunnels 'tunnel'
