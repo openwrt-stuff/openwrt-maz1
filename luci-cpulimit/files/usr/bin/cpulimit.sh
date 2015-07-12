@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. /etc/functions.sh
+. /lib/functions.sh
 
 cpulimit_get(){
 	echo cpulimit_get

@@ -29,16 +29,24 @@ list_tunnels() {
     [ ${type} = "tcp" ] && \
 	TUNNEL_PARAMS=${TUNNEL_PARAMS}",Rport:${rport}]" || \
 	TUNNEL_PARAMS=${TUNNEL_PARAMS}",${DTYPE}:${dname}]"
-    echo $server" : ngrokc"$TUNNEL_PARAMS
-    config_foreach list_servers 'servers'
-    eval "[ -f /tmp/ngrokc/${1}.pid ] || exec ${STDBUF} /usr/bin/ngrokc \$${server}_PARAMS \$TUNNEL_PARAMS 2>&1 | ngrokc_logger ${1} & echo \$! > /tmp/ngrokc/${1}.pid"
+    SERVER_PARAMS=`get_servarg $server`
+    echo $server" : ngrokc "$SERVER_PARAMS $TUNNEL_PARAMS
+    (busybox ps|grep "/usr/bin/ngrokc"|grep -v grep|grep `cat /tmp/ngrokc/${1}.pid`) || \
+    #exec $STDBUF /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>/dev/null 1>/tmp/ngrokc/${1}.log & 
+    exec $STDBUF /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>&1 >/dev/null &
+    echo $! > /tmp/ngrokc/${1}.pid
   fi
+}
+
+get_servarg() {
+	eval echo \$${1}_PARAMS
 }
 
 start() {
 	mkdir -p /tmp/ngrokc
 	 [ -f /usr/lib/coreutils/libstdbuf.so ] && STDBUF="stdbuf -oL " || STDBUF=""
 	config_load 'ngrokc'
+	config_foreach list_servers 'servers'
 	config_foreach list_tunnels 'tunnel'
 }
 
