@@ -1,0 +1,29 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2007 OpenWrt.org
+
+START=99
+
+start() {
+	config_load 'network'
+	config_foreach start_instance 'interface'
+}
+
+start_instance() {
+	config_get proto "$1" 'proto'
+	if [ $proto = "openvpn" ] ; then
+		ls /etc/openvpn | grep -v $1.key | grep -v $1.pem | grep -v $1-ta.key | grep -v $1-ca.pem | while read line
+		do
+			rm -f /etc/openvpn/$line
+		done
+	fi
+	
+	if [ $proto = "openconnect" ] ; then
+		ls /etc/openconnect | grep -v ca-vpn-$1.pem | grep -v user-cert-vpn-$1.pem | grep -v user-key-vpn-$1.pem | while read line
+		do
+			rm -f /etc/openconnect/$line
+		done
+	fi
+	
+}
+
+

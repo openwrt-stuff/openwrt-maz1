@@ -1,0 +1,17 @@
+uksmtools (0.0.1+git20130711-3) unstable; urgency=low
+
+  * debian/rules: ensure we use absolute paths
+
+ -- Eugenio Paolantonio (g7) <me@medesimo.eu>  Mon, 23 Dec 2013 15:38:54 +0100
+
+uksmtools (0.0.1+git20130711-2) unstable; urgency=low
+
+  * debian/rules: ensure we install in /usr
+
+ -- Eugenio Paolantonio (g7) <me@medesimo.eu>  Mon, 23 Dec 2013 15:26:42 +0100
+
+uksmtools (0.0.1+git20130711-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Eugenio Paolantonio (g7) <me@medesimo.eu>  Mon, 23 Dec 2013 15:15:57 +0100 

@@ -1,0 +1,10 @@
+#!/bin/sh 
+
+uci -q batch <<-EOF >/dev/null
+          delete ucitrack.@vpncert-clean[-1]
+          add ucitrack vpncert-clean
+          set ucitrack.@vpncert-clean[-1].init=vpncert-clean   
+          commit ucitrack
+EOF
+rm -f /tmp/luci-indexcahe
+exit 0

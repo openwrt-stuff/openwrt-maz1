@@ -1,0 +1,18 @@
+Source: uksmtools
+Section: utils
+Priority: optional
+Maintainer: Eugenio Paolantonio (g7) <me@medesimo.eu>
+Build-Depends: debhelper (>= 8.0.0), build-essential
+Standards-Version: 3.9.5
+Homepage: http://github.com/semplice/uksmtools
+Vcs-Git: git://github.com/semplice/uksmtools.git
+Vcs-Browser: https://github.com/semplice/zramcfg
+
+Package: uksmtools
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: simple tools to monitor and control UKSM
+ uksmtools contains simple tools to monitor and control UKSM.
+ .
+ It requires a kernel with UKSM enabled, such as pf-kernel or Semplice's
+ desktop kernel.

@@ -1,0 +1,81 @@
+diff -Naur shadowsocks-libev-2.2.1/Makefile.am shadowsocks-libev-2.2.1-new/Makefile.am
+--- shadowsocks-libev-2.2.1/Makefile.am	2015-05-10 14:26:21.000000000 +0200
++++ shadowsocks-libev-2.2.1-new/Makefile.am	2015-07-03 17:56:43.986499100 +0200
+@@ -1,4 +1,4 @@
+-SUBDIRS = libsodium libcork libipset libudns libev src
++SUBDIRS = libcork libipset src
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ man_MANS = shadowsocks-libev.8
+diff -Naur shadowsocks-libev-2.2.1/configure.ac shadowsocks-libev-2.2.1-new/configure.ac
+--- shadowsocks-libev-2.2.1/configure.ac	2015-05-10 14:26:21.000000000 +0200
++++ shadowsocks-libev-2.2.1-new/configure.ac	2015-07-03 17:56:35.570885500 +0200
+@@ -42,7 +42,7 @@
+ AC_LANG_SOURCE
+ 
+ dnl Checks for libev
+-m4_include([libev/libev.m4])
++
+ 
+ dnl Add library for mingw
+ case $host in
+@@ -219,13 +219,12 @@
+ 
+ ACX_PTHREAD
+ 
+-AC_CONFIG_SUBDIRS([libsodium])
++
+ 
+ AC_CONFIG_FILES([ shadowsocks-libev.pc
+                  Makefile
+                  libcork/Makefile
+                  libipset/Makefile
+-                 libudns/Makefile
+-                 libev/Makefile
++                 
+                  src/Makefile])
+ AC_OUTPUT
+diff -Naur shadowsocks-libev-2.2.1/src/Makefile.am shadowsocks-libev-2.2.1-new/src/Makefile.am
+--- shadowsocks-libev-2.2.1/src/Makefile.am	2015-05-10 14:26:21.000000000 +0200
++++ shadowsocks-libev-2.2.1-new/src/Makefile.am	2015-07-03 17:57:37.010540900 +0200
+@@ -1,18 +1,17 @@
+ VERSION_INFO = 1:0:0
+ 
+ AM_CFLAGS = -g -O2 -Wall -Werror -Wno-deprecated-declarations -fno-strict-aliasing -std=gnu99 -D_GNU_SOURCE
+-AM_CFLAGS += -I$(top_srcdir)/libev
+-AM_CFLAGS += -I$(top_srcdir)/libudns
++AM_CFLAGS += -lev -lm
+ AM_CFLAGS += -I$(top_srcdir)/libipset/include
+ AM_CFLAGS += -I$(top_srcdir)/libcork/include
+-AM_CFLAGS += -I$(top_srcdir)/libsodium/src/libsodium/include
++AM_CFLAGS += -lsodium -ludns
+ 
+ AM_LDFLAGS = -static
+ 
+-SS_COMMON_LIBS = $(top_builddir)/libev/libev.la \
++SS_COMMON_LIBS =  \
+ 				 $(top_builddir)/libipset/libipset.la \
+ 				 $(top_builddir)/libcork/libcork.la \
+-				 $(top_builddir)/libsodium/src/libsodium/libsodium.la \
++				  \
+ 				 $(INET_NTOP_LIB)
+ 
+ bin_PROGRAMS = ss-local ss-tunnel
+@@ -53,9 +52,6 @@
+ ss_local_LDADD = $(SS_COMMON_LIBS)
+ ss_tunnel_LDADD = $(SS_COMMON_LIBS)
+ ss_server_LDADD = $(SS_COMMON_LIBS)
+-ss_local_LDADD += $(top_builddir)/libudns/libudns.la
+-ss_tunnel_LDADD += $(top_builddir)/libudns/libudns.la
+-ss_server_LDADD += $(top_builddir)/libudns/libudns.la
+ 
+ ss_local_CFLAGS = $(AM_CFLAGS) -DUDPRELAY_LOCAL
+ ss_tunnel_CFLAGS = $(AM_CFLAGS) -DUDPRELAY_LOCAL -DUDPRELAY_TUNNEL
+@@ -78,7 +74,6 @@
+                    redir.c
+ ss_redir_CFLAGS = $(AM_CFLAGS) -DUDPRELAY_REDIR -DUDPRELAY_LOCAL
+ ss_redir_LDADD = $(SS_COMMON_LIBS)
+-ss_redir_LDADD += $(top_builddir)/libudns/libudns.la
+ endif
+ 
+ lib_LTLIBRARIES = libshadowsocks.la

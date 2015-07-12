@@ -1,0 +1,102 @@
+#!/bin/sh /etc/rc.common
+
+START=65
+
+EXTRA_COMMANDS="status"
+EXTRA_HELP="        status Print the status of the service"
+
+config_load()
+{
+	wifidog_enable=$(uci get wifidog.settings.wifidog_enable)
+	offline_enable=$(uci get wifidog.settings.offline_enable)
+	if [[ "$wifidog_enable" -eq 0 ]]; then
+		stop
+		exit 0
+	else
+	/usr/bin/wifidog-init stop
+	sleep 1
+
+    rm -f /etc/wifidog.conf
+    gateway_interface=$(uci get wifidog.settings.gateway_interface) 
+    gateway_eninterface=$(uci get wifidog.settings.gateway_eninterface)
+    gateway_host=$(uci get wifidog.settings.gateway_host) 
+    gateway_httpport=$(uci get wifidog.settings.gateway_httpport) 
+    gateway_path=$(uci get wifidog.settings.gateway_path) 
+    gateway_connmax=$(uci get wifidog.settings.gateway_connmax) 
+    ssl_enable=$(uci get wifidog.settings.ssl_enable) 
+	check_interval=$(uci get wifidog.settings.check_interval)
+	client_timeout=$(uci get wifidog.settings.client_timeout)
+	sslport=$(uci get wifidog.settings.sslport)
+	deamo_enable=$(uci get wifidog.settings.deamo_enable)
+	gatewayport=$(uci get wifidog.settings.gatewayport)
+	myz_mac=$(uci get wifidog.settings.myz_mac)
+	bmd_url=$(uci get wifidog.settings.bmd_url) 
+              
+echo "
+GatewayInterface $gateway_interface
+AuthServer {
+	Hostname $gateway_host
+	SSLAvailable $ssl_enable
+	SSLPort $sslport
+	HTTPPort $gateway_httpport
+	Path $gateway_path
+	}
+Daemon $deamo_enable
+GatewayPort $gatewayport
+CheckInterval $check_interval
+ClientTimeout $client_timeout
+HTTPDMaxConn $gateway_connmax
+TrustedMACList $myz_mac
+
+FirewallRuleSet global {
+FirewallRule allow to 61.139.2.69
+FirewallRule allow to 8.8.8.8
+FirewallRule allow to 114.114.114.114
+}
+FirewallRuleSet validating-users {
+    FirewallRule allow to 0.0.0.0/0
+}
+
+FirewallRuleSet known-users {
+    FirewallRule allow to 0.0.0.0/0
+}
+
+FirewallRuleSet unknown-users {
+    FirewallRule allow udp port 53
+    FirewallRule allow tcp port 53
+    FirewallRule allow udp port 67
+    FirewallRule allow tcp port 67
+}
+
+FirewallRuleSet locked-users {
+    FirewallRule block to 0.0.0.0/0
+}
+" >> /etc/wifidog.conf
+	fi
+}
+  
+start() {	
+
+
+	config_load
+	/usr/bin/wifidog-init start
+	[ "$offline_enable" -eq 1 ] && /etc/init.d/lighttpd start
+	sleep 2
+	iptables -t filter -A  WiFiDog_br-lan_AuthServers -d $bmd_url -j ACCEPT
+	iptables -t nat -A WiFiDog_br-lan_AuthServers  -d $bmd_url -j ACCEPT
+}
+
+stop() {
+	if /usr/bin/wifidog-init status 2> /dev/null 
+	then
+		/usr/bin/wifidog-init stop
+	fi
+	sleep 2
+	/etc/init.d/lighttpd stop
+}
+
+status() {
+	/usr/bin/wifidog-init status
+	
+}
+

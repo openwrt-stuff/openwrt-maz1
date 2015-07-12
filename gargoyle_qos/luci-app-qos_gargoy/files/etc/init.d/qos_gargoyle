@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2011 OpenWrt.org
+
+START=99
+
+start(){
+[ `uci get qos_gargoyle.config.enabled` = 1 ] && /usr/bin/qos_gargoyle start
+}
+
+stop(){
+/usr/bin/qos_gargoyle stop
+}
+restart(){
+/usr/bin/qos_gargoyle stop
+[ `uci get qos_gargoyle.config.enabled` = 1 ] && /usr/bin/qos_gargoyle start
+}
+

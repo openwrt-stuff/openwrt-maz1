@@ -1,0 +1,11 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.@wifidog[-1]
+	set ucitrack.wifidog="wifidog"
+	set ucitrack.wifidog.exec='/etc/init.d/wifidog start'
+	commit ucitrack
+EOF
+
+rm -f /tmp/luci-indexcache
+exit 0

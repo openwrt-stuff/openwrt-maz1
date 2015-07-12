@@ -1,0 +1,38 @@
+#  dns2socks.lua
+#  generated from dns2socks.po
+
+msgid "DNS2SOCKS is a command line utility running to forward DNS requests to a DNS server via a SOCKS tunnel."
+msgstr "DNS2SOCKS可以把DNS请求通过Socks代理转发到DNS服务器"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Socks Server IP Address"
+msgstr "Socks服务器IP地址"
+
+msgid "Your Socks5 Server IP Address."
+msgstr "你的Socks5服务器地址。"
+
+msgid "Socks Server Port"
+msgstr "Socks服务器端口"
+
+msgid "Your Socks5 Server Port."
+msgstr "你的Socks5服务器端口。"
+
+msgid "DNS Server IP Address"
+msgstr "DNS服务器IP地址"
+
+msgid "DNS server that DNS requests will be forwarded to."
+"DNS请求所转发到的DNS服务器。"
+
+msgid "Local IP Address"
+msgstr "本地IP地址"
+
+msgid "IP address that DNS2SOCKS should listen to."
+msgstr "DNS2SOCKS监听的地址。"
+
+msgid "The Port that DNS2SOCKS should listen to."
+msgstr "DNS2SOCKS监听的端口。"

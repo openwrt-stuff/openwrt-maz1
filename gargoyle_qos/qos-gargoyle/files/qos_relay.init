@@ -1,0 +1,8 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2011 OpenWrt.org
+
+START=99
+
+start(){
+sleep 55 && /etc/init.d/qos_gargoyle restart
+}

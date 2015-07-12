@@ -1,0 +1,124 @@
+#!/bin/sh
+# Command line arguments
+#* $1                           -- device
+#* $2                           -- device mtu
+#* $3                           -- link mtu
+#* $4                           -- local ip
+#* $5                           -- remote ip (tun) or netmask (tap)
+#* $6                           -- "init" or "restart"
+# --
+# Parameters passed through environment
+#* INTERFACE                    -- luci interface name
+#* script_type                  -- opvn script type: up, down
+#* dev                          -- device name
+#* dev_type                     -- device type
+#* foreign_option_{n}           -- options pushed from server
+#* ifconfig_local               -- local IP address
+#* ifconfig_remote              -- remote point-to-point IP address
+#* link_mtu                     -- link MTU
+#* proto                        -- transport protocol: udp, tcp
+#* remote_{n}                   -- remote server
+#* remote_port_{n}              -- port of remote server
+#* route_network_{n}            -- network route ${n}
+#* route_netmask_{n}            -- netmask of route ${n}
+#* route_gateway_{n}            -- gateway address of route ${n}
+#* route_vpn_gateway            -- default gateway for vpn
+#* route_net_gateway            -- IP associated route used to connect to server
+
+HOOKS_DIR=/etc/openvpn
+
+do_up() {
+	logger -t openvpn "proto_init_update $dev 1"
+	proto_init_update "$dev" 1
+
+	proto_add_ipv4_address "$ifconfig_local" 32 "" "$ifconfig_remote"
+
+	i=0
+	while :; do
+		i=$(($i + 1))
+		eval OPTION="\${foreign_option_${i}}"
+		[ -n "$OPTION" ] || break
+
+		option=$(echo ${OPTION} | cut -f1 -d' ')
+		[ $option == "dhcp-option" ] || continue
+
+		type=$(echo ${OPTION} | cut -f2 -d' ')
+		value=$(echo ${OPTION} | cut -f3- -d' ')
+
+		case $type in
+			DNS)
+				proto_add_dns_server "$value"
+				;;
+			DOMAIN|DOMAIN-SEARCH)
+				proto_add_dns_search "$value"
+				;;
+			WINS|NBDD|NTP|NBT|NBS|DISABLE-NBT)
+				;;
+			*)
+				logger -t openvpn "unknown dhcp_option: '$type'"
+				;;
+		esac
+	done
+
+	i=1
+	while :; do
+		eval NETWORK="\${route_network_${i}}"
+		eval NETMASK="\${route_netmask_${i}}"
+		eval GATEWAY="\${route_gateway_${i}}"
+		[ -n "$NETWORK" ] || break
+
+		if [ $NETWORK != "0.0.0.0" ]; then
+			proto_add_ipv4_route "$NETWORK" "$NETMASK" "$GATEWAY"
+		else
+			proto_add_ipv4_route "0.0.0.0" 0 "$route_vpn_gateway"
+		fi
+		i=$(($i + 1))
+	done
+
+	logger -t openvpn "proto_send_update $dev"
+	proto_send_update "$INTERFACE"
+}
+
+do_down() {
+	proto_init_update "$dev" 0
+	proto_send_update "$INTERFACE"
+}
+
+run_hooks() {
+	HOOK="$1"
+
+	if [ -d ${HOOKS_DIR}/${HOOK}.d ]; then
+		for script in ${HOOKS_DIR}/${HOOK}.d/* ; do
+			[ -f $script ] && . $script
+		done
+	fi
+}
+
+#### Main
+logger -t openvpn "args $*"
+
+if [ -z "$script_type" ]; then
+	logger -t openpn "this script must be called with a script type" 1>&2
+	exit 1
+fi
+
+. /lib/netifd/netifd-proto.sh
+
+case "$script_type" in
+	up)
+		run_hooks up
+		do_up
+		run_hooks post-up
+		;;
+	down)
+		run_hooks down
+		do_down
+		run_hooks post-down
+		;;
+	*)
+		logger -t openvpn "unknown reason: '$reason'" 1>&2
+		exit 1
+		;;
+esac
+
+exit 0

@@ -1,0 +1,30 @@
+#!/bin/sh /etc/rc.common
+
+START=60
+STOP=60
+APP='dnscrypt-proxy'
+
+start() {
+	ulimit -n 4096
+
+	config_load "$APP"
+	local enabled address port resolver resolvers_list
+	
+	config_get enabled config enabled
+	config_get address config address
+	config_get port config port
+	config_get resolvers_list config resolvers_list
+	config_get resolver config resolver
+
+	[ "$enabled" = '1' ] && {
+		service_start /usr/sbin/dnscrypt-proxy -d \
+			-u nobody \
+			-a ${address}:${port} \
+			-L ${resolvers_list:-'/usr/share/dnscrypt-proxy/dnscrypt-resolvers.csv'} \
+			-R ${resolver:-'opendns'} 
+	}
+}
+
+stop() {
+	service_stop /usr/sbin/dnscrypt-proxy
+}

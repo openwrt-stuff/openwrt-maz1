@@ -1,0 +1,50 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Ngrok Settings"
+msgstr "Ngrok反向代理"
+
+msgid "Ngrok"
+msgstr "Ngrok反向代理"
+
+msgid "Secure tunnels to localhost."
+msgstr "易用而安全的反向代理软件"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Ngrok Host"
+msgstr "Ngrok服务器"
+
+msgid "Ngrok Port"
+msgstr "Ngrok服务器端口"
+
+msgid "Auth Token"
+msgstr "令牌"
+
+msgid "Type"
+msgstr "类型"
+
+msgid "Local Address"
+msgstr "本地地址"
+
+msgid "Local Port"
+msgstr "本地端口"
+
+msgid "Custom Domain/Subdomain"
+msgstr "自定义域名/子域名"
+
+msgid "Use Custom Domain"
+msgstr "使用自定义域名"
+
+msgid "Remote Port"
+msgstr "远程端口"
+
+msgid "Active Ngrok Connections"
+msgstr "活动的Ngrok连接"
+
+msgid "There are no active Ngrok connections."
+msgstr "没有活动的Ngrok连接。"
+
+msgid "If you enabled \"Use Custom Domain\", please set your domain's CNAME or A record to the tunnel server."
+msgstr "如果启用了自定义域名，请把域名的CNAME记录或A记录指向Ngrok隧道服务器。"

@@ -1,0 +1,21 @@
+diff -Naur a/kmod/drcom.c b/kmod/drcom.c
+--- a/kmod/drcom.c	2009-10-12 05:11:48.000000000 +0200
++++ b/kmod/drcom.c	2015-07-12 09:06:13.000000000 +0200
+@@ -687,7 +687,7 @@
+ 					csum_partial((char *)tcph, tcph->doff << 2, skb->csum));
+ 
+ 	iph->tot_len = htons(skb->len);
+-	__ip_select_ident(iph, skb_dst(skb), 0);
++	__ip_select_ident(iph, skb_dst(skb));
+ 	ip_send_check(iph);
+ 
+ 	return skb;
+@@ -724,7 +724,7 @@
+ 					csum_partial((char *)tcph, skb->len-ip_hdrlen(skb), skb->csum));
+ 
+ 	iph->tot_len = htons(skb->len);
+-	__ip_select_ident(iph, skb_dst(skb), 0);
++	__ip_select_ident(iph, skb_dst(skb));
+ 	ip_send_check(iph);
+ 
+ 	return skb;

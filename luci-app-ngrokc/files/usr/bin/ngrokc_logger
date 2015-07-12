@@ -1,0 +1,9 @@
+#!/bin/sh
+mkdir -p /tmp/ngrokc/
+touch /tmp/ngrokc/${1}.log
+while read line
+do
+	echo $line > /tmp/ngrokc/${1}.log
+done
+rm -f /tmp/ngrokc/${1}.log
+rm -f /tmp/ngrokc/${1}.pid

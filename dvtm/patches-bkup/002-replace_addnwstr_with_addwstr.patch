@@ -1,0 +1,34 @@
+diff -Naur a/dvtm.c b/dvtm.c
+--- a/dvtm.c	2015-02-19 17:51:23.000000000 +0100
++++ b/dvtm.c	2015-07-07 18:40:13.380667700 +0200
+@@ -353,22 +353,26 @@
+ 
+ 	wchar_t wbuf[sizeof bar.text];
+ 	size_t numchars = mbstowcs(wbuf, bar.text, sizeof bar.text);
+-
++	//fix
++  char *pmb = (char *)malloc( MB_CUR_MAX );
+ 	if (numchars != (size_t)-1 && (width = wcswidth(wbuf, maxwidth)) != -1) {
+ 		int pos;
+ 		for (pos = 0; pos + width < maxwidth; pos++)
+ 			addch(' ');
+-
++    
+ 		for (size_t i = 0; i < numchars; i++) {
+ 			pos += wcwidth(wbuf[i]);
+ 			if (pos > maxwidth)
+ 				break;
+-			addnwstr(wbuf+i, 1);
++				//fix
++				wctomb( pmb, *(wbuf+i) );
++			//addwnstr(wbuf+i, 1);
++			addnstr(pmb, 1);
+ 		}
+ 
+ 		clrtoeol();
+ 	}
+-
++  free(pmb);
+ 	attrset(TAG_NORMAL);
+ 	mvaddch(bar.y, screen.w - 1, ']');
+ 	attrset(NORMAL_ATTR);

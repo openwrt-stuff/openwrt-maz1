@@ -1,0 +1,9 @@
+
+config 'nfsd'
+	option 'enable' '0'
+
+config 'nfsshare'
+	option 'enable' '1'
+	option 'path' '/mnt/sda1'
+	option 'name' 'sda1'
+
