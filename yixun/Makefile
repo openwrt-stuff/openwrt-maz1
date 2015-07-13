@@ -22,7 +22,7 @@ define Package/yixun/Default
   CATEGORY:=Network
   TITLE:=Yixun Crack
   SUBMENU:=CERNET
-  URL:=http://yixun.sourceforge.net/
+  URL:=https://github.com/lanhao34/yixun
   MAINTAINER:=maz-1
   DEPENDS:=+libc
 endef
