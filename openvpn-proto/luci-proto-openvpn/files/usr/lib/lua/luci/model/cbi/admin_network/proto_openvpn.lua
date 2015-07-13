@@ -20,15 +20,15 @@ local ovpn_cert_file, ovpn_key_file, ovpn_ca_file, ovpn_ta_file
 local ifc = arg[1]
 
 --add file chooser
-local file_chooser="<br><input type=\"button\" class=\"file-uploader\" value=\"" .. translate("Upload...") .."\" onclick=\"" .. 
+local file_chooser="<br><div><input type=\"button\" class=\"file-uploader\" value=\"" .. translate("Upload...") .."\" onclick=\"" .. 
 "this.parentNode.lastChild.click();\"/>" ..
 "<br><input type=\"file\" id=\"test1\" class=\"files-upload\" style=\"display:none;\" name=\"file\" onchange=\"javascript:" .. 
-"var PARENT=this.parentNode.parentNode.id.split('-');" .. 
+"var PARENT=this.parentNode.parentNode.parentNode.id.split('-');" .. 
 "var curnode=document.getElementById('cbid.network.'+PARENT[2]+'.'+PARENT[3]);" .. 
 "var files = this.files;if (!files.length) {alert('Please select a valid file!');return;}" .. 
 "var file=files[0];var reader=new FileReader();" .. 
 "reader.onloadend=function(){if (this.readyState == FileReader.DONE){" .. 
-"curnode.value=this.result;}};reader.readAsText(file, 'UTF-8');\"accept=\".pem,.crt,.key,.csr\"/>"
+"curnode.value=this.result;}};reader.readAsText(file, 'UTF-8');\"accept=\".pem,.crt,.key,.csr\"/></div>"
 
 ovpn_cert_file = "/etc/openvpn/" .. ifc .. ".pem"
 ovpn_key_file = "/etc/openvpn/" .. ifc .. ".key"
