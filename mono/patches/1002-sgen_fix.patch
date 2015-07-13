@@ -1,0 +1,34 @@
+diff -Naur a/mono/metadata/sgen-descriptor.h b/mono/metadata/sgen-descriptor.h
+--- a/mono/metadata/sgen-descriptor.h	2015-05-08 17:22:57.000000000 +0200
++++ b/mono/metadata/sgen-descriptor.h	2015-07-13 18:36:16.093437000 +0200
+@@ -194,7 +194,29 @@
+ /* a bitmap desc means that there are pointer references or we'd have
+  * choosen run-length, instead: add an assert to check.
+  */
+-#ifdef __GNUC__
++#if defined(__GNUC__) && SIZEOF_VOID_P==4
++#define OBJ_BITMAP_FOREACH_PTR(desc,obj)       do {    \
++		/* there are pointers */        \
++		void **_objptr = (void**)(obj); \
++		gsize _bmap = (desc) >> 16;     \
++		_objptr += OBJECT_HEADER_WORDS; \
++		{ \
++			int _index = __builtin_ctz (_bmap);		\
++			_objptr += _index; \
++			_bmap >>= (_index + 1);				\
++			HANDLE_PTR (_objptr, (obj));		\
++			_objptr ++;							\
++			} \
++		while (_bmap) { \
++			int _index = __builtin_ctz (_bmap);		\
++			_objptr += _index; \
++			_bmap >>= (_index + 1);				\
++			HANDLE_PTR (_objptr, (obj));		\
++			_objptr ++;							\
++		}										\
++	} while (0)
++#elif defined(__GNUC__) && SIZEOF_VOID_P==8
++/* Same as above, but use _builtin_ctzl () */
+ #define OBJ_BITMAP_FOREACH_PTR(desc,obj)	do {		\
+ 		/* there are pointers */			\
+ 		void **_objptr = (void**)(obj);			\
