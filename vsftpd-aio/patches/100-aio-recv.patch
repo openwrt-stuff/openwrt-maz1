@@ -33,7 +33,7 @@
  
 --- /dev/null
 +++ b/recv_aio.c
-@@ -0,0 +1,416 @@
+@@ -0,0 +1,421 @@
 +/*
 + * Author: Tobias Waldvogel
 + * based on work from Giuseppe De Robertis for ProFTPD
@@ -57,6 +57,11 @@
 +#define BLOCK_SIZE (512 * 1024)
 +#define SECTOR_SIZE getpagesize()
 +#define ROUND_SECTOR(x) ((x) + SECTOR_SIZE-1) & ~(SECTOR_SIZE-1)
++
++#ifndef __UCLIBC__
++#include <sys/types.h>
++#include <sys/stat.h>
++#endif
 +
 +typedef struct iocb_ctrl_struct {
 +	unsigned char	*mem_start;

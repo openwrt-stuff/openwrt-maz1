@@ -53,10 +53,6 @@ define Package/vsftpd-aio/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/vsftpd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc
-	$(INSTALL_CONF) ./files/vsftpd.conf $(1)/etc/
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/vsftpd.init $(1)/etc/init.d/vsftpd
-	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/etc/pam.d
 	$(LN) other $(1)/etc/pam.d/ftp
 endef
