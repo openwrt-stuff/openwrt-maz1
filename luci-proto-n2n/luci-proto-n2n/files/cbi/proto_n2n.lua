@@ -1,17 +1,17 @@
 local map, section, net = ...
 local ifc = net:get_interface()
 
-local cfgcmd = "var Macaddr=document.getElementById(this.parentNode.parentNode.parentNode.id.replace(\"cbi\", \"cbid\").replace(/-/g, \".\"));" ..
+local cfgcmd = "var Macaddr=document.getElementById(this.parentNode.parentNode.parentNode.id.replace('cbi', 'cbid').replace(/-/g, '.'));" ..
 "function randomString(len,type){len=len||32;type=type||0;" ..
-"var $chars=\"\";" ..
-"switch(type){case 1:$chars=\"13579bdf\";break;" ..
-"case 2:$chars=\"24680ace\";break;" ..
-"default:$chars=\"0123456789abcdef\";break;}" ..
-"var maxPos=$chars.length;var pwd=\"\";" ..
-"for(i = 0; i < len; i++){pwd+=$chars.charAt(Math.floor(Math.random() * maxPos));}return pwd;};" ..
-"Macaddr.value=randomString(1)+randomString(1,2)+\":\"+randomString(2)+\":\"+randomString(2)+\":\"+randomString(2)+\":\"+randomString(2)+\":\"+randomString(2)"
+"var $chars='';" ..
+"switch(type){case 1:$chars='13579bdf';break;" ..
+"case 2:$chars='24680ace';break;" ..
+"default:$chars='0123456789abcdef';break;}" ..
+"var maxPos=$chars.length;var pwd='';" ..
+"for(i = 0; i &lt; len; i++){pwd+=$chars.charAt(Math.floor(Math.random() * maxPos));}return pwd;};" ..
+"Macaddr.value=randomString(1)+randomString(1,2)+':'+randomString(2)+':'+randomString(2)+':'+randomString(2)+':'+randomString(2)+':'+randomString(2);"
 
-local cfgbtn = "&nbsp;<br><input type=\"button\" id=\"test1\" value=\" " .. translate("Generate Randomly") .. " \" onclick='" .. cfgcmd .. "'/>"
+local cfgbtn = "&nbsp;<br/><input type=\"button\" id=\"test1\" value=\" " .. translate("Generate Randomly") .. " \" onclick=\"" .. cfgcmd .. "\"/>"
 
 server = section:taboption("general", Value, "server", translate("Supernode server"))
 server.datatype = "host"
