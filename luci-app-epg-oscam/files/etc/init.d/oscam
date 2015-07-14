@@ -38,34 +38,27 @@ echo "game  start....."
  fi
 
  [  "$enable" == "1"  ]&&oscam_start 
-   interval=$(uci get oscam.@setting[0].interval)
-   #interval_current=`cat /etc/crontabs/root | grep "/etc/init.d/oscam restart" | grep -oP "(?<=\*/)\d+"`
- 
 
-( cat /etc/crontabs/root | grep -v "/etc/init.d/oscam restart" ) > /tmp/crontabs 
-
+interval=$(uci get oscam.@setting[0].interval)
+oscam_cron=`cat /etc/crontabs/root | grep "/etc/init.d/oscam restart"`
 if  [ "$enable" == "1" -a "$interval" != "0" ]; then 
-	echo "*/${interval} * * * * /etc/init.d/oscam restart" >> /tmp/crontabs
-	#uci delete cron.`uci show cron|grep "/etc/init.d/oscam"|cut -d "." -f2`
-	#uci add cron task
-	#uci set cron.@task[-1].enabled=1
-	#uci set cron.@task[-1].task_Everyday=1
-	#uci set cron.@task[-1].task_time=custom
-	#uci set cron.@task[-1].task_minute=${interval}
-	#uci set cron.@task[-1].task_name="oscam_scheduler"
-	#uci set cron.@task[-1].task_task="/etc/init.d/oscam restart"
-	#uci commit cron
-	cat /tmp/crontabs > /etc/crontabs/root
-	/etc/init.d/cron restart
-#else
-	#uci delete cron.`uci show cron|grep "/etc/init.d/oscam"|cut -d "." -f2`
-	#uci commit cron
+	oscam_new="*/${interval} * * * * /etc/init.d/oscam restart"
+	if [ "z${oscam_cron}" != "z${oscam_new}" ] ; then
+		cat /etc/crontabs/root | grep -v "/etc/init.d/oscam restart" > /tmp/crontabs_oscam
+		echo "" >> /tmp/crontabs_oscam
+		echo "*/${interval} * * * * /etc/init.d/oscam restart" >> /tmp/crontabs_oscam
+		cat /tmp/crontabs_oscam | grep -v ^$ > /etc/crontabs/root
+		/etc/init.d/cron restart
+	fi
+else
+	if [ "z"${oscam_cron} != "z" ] ; then
+		cat /etc/crontabs/root | grep -v "/etc/init.d/oscam restart" > /tmp/crontabs_oscam
+		cat /tmp/crontabs_oscam | grep -v ^$ > /etc/crontabs/root
+		/etc/init.d/cron restart
+	fi
 	
 fi
-
-cat /tmp/crontabs > /etc/crontabs/root
-/etc/init.d/cron restart
-rm /tmp/crontabs
+rm -f /tmp/crontabs_oscam
 
 }
 

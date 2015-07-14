@@ -120,30 +120,30 @@ config_get interval $1 interval
 
 #make  scheduler
 
-
-( cat /etc/crontabs/root | grep -v "/usr/bin/epg  scheduler" ) > /tmp/crontabs 
+epg_cron=`cat /etc/crontabs/root | grep "/usr/bin/epg scheduler"`
 if  [ "$enable" == "1"  -a  "${interval}" != "0" ]; then 
-#uci delete cron.`uci show cron|grep "/usr/bin/epg"|cut -d "." -f2`
-mkdir -p /tmp/epg/
-mkdir -p /tmp/epg/store
-mkdir -p /tmp/epg/epg
-mkdir -p /www/atmosphere
+	mkdir -p /tmp/epg/
+	mkdir -p /tmp/epg/store
+	mkdir -p /tmp/epg/epg
+	mkdir -p /www/atmosphere
+	epg_new="*/${interval} * * * * /usr/bin/epg scheduler"
+	if [ "z${epg_cron}" != "z${epg_new}" ] ; then
+		cat /etc/crontabs/root | grep -v "/etc/init.d/epg scheduler" > /tmp/crontabs_epg
+		echo "*/${interval} * * * * /etc/init.d/epg scheduler" >> /tmp/crontabs_epg
+		echo "" >> /tmp/crontabs_epg
+		cat /tmp/crontabs_epg | grep -v ^$ > /etc/crontabs/root
+		/etc/init.d/cron restart
+	fi
+else
+	if [ "z"${epg_cron} != "z" ] ; then
+		cat /etc/crontabs/root | grep -v "/etc/init.d/epg scheduler" > /tmp/crontabs_epg
+		cat /tmp/crontabs_epg | grep -v ^$ > /etc/crontabs/root
+		/etc/init.d/cron restart
+	fi
+rm -f /tmp/crontabs_epg
 
-#uci add cron task
-#uci set cron.@task[-1].enabled=1
-#uci set cron.@task[-1].task_Everyday=1
-#uci set cron.@task[-1].task_time=custom
-#uci set cron.@task[-1].task_minute=${interval}
-#uci set cron.@task[-1].task_name="epg_scheduler"
-#uci set cron.@task[-1].task_task="/usr/bin/epg  scheduler"
-#uci commit cron
-echo "*/${interval} * * * * /usr/bin/epg  scheduler" >> /tmp/crontabs
-#else
-#uci delete cron.`uci show cron|grep "/usr/bin/epg"|cut -d "." -f2`
-#uci commit cron
 fi
 
-cat /tmp/crontabs > /etc/crontabs/root
 /etc/init.d/cron restart
 
 }

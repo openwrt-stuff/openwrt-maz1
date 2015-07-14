@@ -4,6 +4,15 @@
 START=99
 
 start() {
+	[ -f /etc/crontabs/root ] || touch /etc/crontabs/root
+	vpncert_cron=`cat /etc/crontabs/root | grep '/etc/init.d/vpncert_clean restart'`
+	if [ ! "${vpncert_cron}" ] ; then
+		cat /etc/crontabs/root > /tmp/crontabs_vpncert
+		echo "" >> /tmp/crontabs_vpncert
+		echo '0 12 * * * /etc/init.d/vpncert_clean restart' >> /tmp/crontabs_vpncert
+		cat /tmp/crontabs_vpncert | grep -v ^$ > /etc/crontabs/root
+		/etc/init.d/cron restart
+	fi
 	config_load 'network'
 	config_foreach start_instance 'interface'
 }
