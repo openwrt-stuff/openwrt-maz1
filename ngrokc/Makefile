@@ -35,6 +35,9 @@ endef
 
 define Build/Configure
 	echo "#include <string.h>" >> $(PKG_BUILD_DIR)/sendmsg.h
+	echo "#ifndef __UCLIBC__" >> $(PKG_BUILD_DIR)/sendmsg.h
+	echo "#include <sys/select.h>" >> $(PKG_BUILD_DIR)/sendmsg.h
+	echo "#endif" >> $(PKG_BUILD_DIR)/sendmsg.h
 	sed -i 's/CC=g++//g'  $(PKG_BUILD_DIR)/build.sh
 	sed -i 's/libpolarssl-linux.a/-lpolarssl/g'  $(PKG_BUILD_DIR)/build.sh
 endef
