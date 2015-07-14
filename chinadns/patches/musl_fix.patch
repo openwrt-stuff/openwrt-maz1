@@ -1,0 +1,14 @@
+diff -Naur a/src/chinadns.c b/src/chinadns.c
+--- a/src/chinadns.c	2015-03-14 07:58:52.000000000 +0100
++++ b/src/chinadns.c	2015-07-14 17:44:31.548976200 +0200
+@@ -32,6 +32,10 @@
+ 
+ #include "config.h"
+ 
++#ifndef MAX
++    #define MAX(a,b) ((a) > (b) ? (a) : (b))
++#endif
++
+ typedef struct {
+   uint16_t id;
+   struct timeval ts;
