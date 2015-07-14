@@ -62,6 +62,6 @@ define Package/dns2socks/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(PKG_SOURCE_SUBDIR)/$(PKG_NAME) $(1)/usr/bin/dns2socks
 endef
 
-$(shell $(RM) $(DL_DIR)/$(PKG_SOURCE))
+#$(shell $(RM) $(DL_DIR)/$(PKG_SOURCE))
 
 $(eval $(call BuildPackage,dns2socks))
