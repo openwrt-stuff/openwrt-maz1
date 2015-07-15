@@ -25,16 +25,17 @@ list_tunnels() {
 	[ -z "$lhost" ] && lhost="127.0.0.1"
   if [ "$enabled" = 1 ]; then
     TUNNEL_PARAMS=" -AddTun[Type:${type},Lhost:${lhost},Lport:${lport}"
-    [ "z"$custom_domain = "z1" ] && DTYPE="Hostname" || DTYPE="Sdname"
+    [ "z""$custom_domain" = "z1" ] && DTYPE="Hostname" || DTYPE="Sdname"
     [ ${type} = "tcp" ] && \
-	TUNNEL_PARAMS=${TUNNEL_PARAMS}",Rport:${rport}]" || \
-	TUNNEL_PARAMS=${TUNNEL_PARAMS}",${DTYPE}:${dname}]"
+	TUNNEL_PARAMS=${TUNNEL_PARAMS}",Rport:${rport}," || \
+	TUNNEL_PARAMS=${TUNNEL_PARAMS}",${DTYPE}:${dname},"
+    TUNNEL_PARAMS=${TUNNEL_PARAMS}"Profile:${1}]"
     SERVER_PARAMS=`get_servarg $server`
     echo $server" : ngrokc "$SERVER_PARAMS $TUNNEL_PARAMS
-    (busybox ps|grep "/usr/bin/ngrokc"|grep -v grep|grep `cat /tmp/ngrokc/${1}.pid`) || \
-    #exec $STDBUF /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>/dev/null 1>/tmp/ngrokc/${1}.log & 
+    CMD_EXIST=`busybox ps|grep Profile:${1}|grep -v grep`
+    [ -z "${CMD_EXIST}" ] && \
     exec /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>&1 >/dev/null &
-    echo $! > /tmp/ngrokc/${1}.pid
+    #exec $STDBUF /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>/dev/null 1>/tmp/ngrokc/${1}.log & 
   fi
 }
 
