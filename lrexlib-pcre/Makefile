@@ -17,18 +17,17 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/luci-lib-lrexlib-pcre/Default
-  SECTION:=LuCI
-  CATEGORY:=LuCI
-  SUBMENU:=6. Libraries
+define Package/lrexlib-pcre/Default
+  SECTION:=libs
+  CATEGORY:=Libraries
   TITLE:=PCRE Library for Lua 5.1
   URL:=https://github.com/LuaDist/lrexlib-pcre
   MAINTAINER:=maz-1
-  DEPENDS:=+luci +libpcre
+  DEPENDS:=+lua +libpcre
 endef
 
-define Package/luci-lib-lrexlib-pcre
-	$(call Package/luci-lib-lrexlib-pcre/Default)
+define Package/lrexlib-pcre
+	$(call Package/lrexlib-pcre/Default)
 endef
 
 define Build/Install
@@ -39,13 +38,13 @@ define Build/Prepare
 	$(CP) ./src/* $(PKG_BUILD_DIR)/
 endef
 
-define Package/luci-lib-lrexlib-pcre/description
+define Package/lrexlib-pcre/description
    	PCRE Library for Lua 5.1
 endef
 
-define Package/luci-lib-lrexlib-pcre/install
+define Package/lrexlib-pcre/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rex_pcre.so $(1)/usr/lib/lua/rex_pcre.so
 endef
 
-$(eval $(call BuildPackage,luci-lib-lrexlib-pcre))
+$(eval $(call BuildPackage,lrexlib-pcre))
