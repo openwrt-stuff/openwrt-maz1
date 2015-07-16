@@ -9,12 +9,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ngrokc
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.bz2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
-PKG_REV=bd404c8
+PKG_REV=32aa1e4
 PKG_SOURCE_VERSION:=$(PKG_REV)
 PKG_SOURCE_URL:=https://github.com/dosgo/ngrok-c.git
 
@@ -30,15 +30,6 @@ define Package/ngrokc
 	URL:=https://github.com/dosgo/ngrok-c
 	DEPENDS:=+libc +libpthread +libpolarssl +libstdcpp
 endef
-
-
-define Build/Configure
-	echo "#include <string.h>" >> $(PKG_BUILD_DIR)/sendmsg.h
-	echo "#ifndef __UCLIBC__" >> $(PKG_BUILD_DIR)/sendmsg.h
-	echo "#include <sys/select.h>" >> $(PKG_BUILD_DIR)/sendmsg.h
-	echo "#endif" >> $(PKG_BUILD_DIR)/sendmsg.h
-endef
-
 
 define Package/ngrokc/install
 	$(INSTALL_DIR) $(1)/usr/bin
