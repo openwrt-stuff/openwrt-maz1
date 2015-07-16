@@ -23,8 +23,9 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libopenssl-lua
-  SECTION:=libs
-  CATEGORY:=Libraries
+  SUBMENU:=Lua
+  SECTION:=lang
+  CATEGORY:=Languages
   TITLE:=Openssl binding for Lua
   URL:=https://github.com/zhaozg/lua-openssl
   DEPENDS:=+libc +lua +libopenssl +librt

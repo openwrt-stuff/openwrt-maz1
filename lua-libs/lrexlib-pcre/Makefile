@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=luci-lib-lrexlib-pcre
+PKG_NAME:=lrexlib-pcre
 PKG_VERSION:=2.7.2
 PKG_RELEASE:=1
 
@@ -18,8 +18,9 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/lrexlib-pcre/Default
-  SECTION:=libs
-  CATEGORY:=Libraries
+  SUBMENU:=Lua
+  SECTION:=lang
+  CATEGORY:=Languages
   TITLE:=PCRE Library for Lua 5.1
   URL:=https://github.com/LuaDist/lrexlib-pcre
   MAINTAINER:=maz-1
