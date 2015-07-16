@@ -1,0 +1,144 @@
+.mso www.tmac
+.TH reredirect 1 "26 Aug 2014"
+.SH NAME
+reredirect \- Tool to dynamically redirect outputs of a running process
+.SH SYNOPSIS
+.B reredirect [-m
+.I FILE
+.B |-o
+.I FILE
+.B |-e
+.I FILE
+.B |-O
+.I FD
+.B |-E
+.I FD
+.B ] [-N] [-d]
+.I PID
+
+.SH DESCRIPTION
+
+.B reredirect
+is a utility for taking an existing running program and
+attaching its outputs (standard output and error output) to files or
+another process.
+
+Simple usage is:
+
+    reredirect -m FILE PID
+
+It will redirect outputs of 
+.I PID
+to 
+.I FILE.
+It is also possible to redirect standard
+output and error output in different files:
+
+    reredirect -o FILE1 -e FILE2 PID
+
+.B \-m
+option is just a shortcut to 
+.B \-o FILE \-e FILE
+
+After launched, reredirect, give you command to restore state of 
+.I PID.
+It will looks like:
+
+    reredirect -N -O 5 -E 3 5453
+
+.B \-O
+and 
+.B \-E
+act as 
+.B \-o 
+and 
+.B \-e 
+but with already opened file descriptors in
+.I PID.
+They only used to restore previous state of 
+.I PID.
+
+
+
+.SH OPTIONS
+
+.B \-o FILE
+.IP
+File to redirect stdout
+.LP
+
+.B \-e FILE
+.IP
+File to redirect stderr
+.LP
+
+.B \-m FILE
+.IP
+Same than 
+.B \-o FILE \-e FILE
+.LP
+
+.B \-O FD
+.IP
+Redirect stdout to this file descriptor. Mainly used to restore process outputs
+.LP
+
+.B \-E FD
+.IP
+Redirect stderr to this file descriptor. Mainly used to restore process outputs
+.LP
+
+.B \-N
+.IP
+Do not save previous stream
+.LP
+
+.B \-V
+.IP
+Print the version of
+.B reredirect
+and exit.
+.LP
+
+.B \-h
+.IP
+Print a usage message and exit.
+.LP
+
+.B \-v
+.IP
+Print verbose debug output while running.
+.LP
+
+.SH NOTES
+
+.B reredirect
+depends on the
+.BR ptrace (2)
+system call to attach to the remote program. On Ubuntu Maverick and higher, this
+ability is disabled by default for security reasons. You can enable it
+temporarily by doing
+.IP
+ # echo 0 > /proc/sys/kernel/yama/ptrace_scope
+.LP
+as root, or permanently by editing the file
+.IR /etc/sysctl.d/10-ptrace.conf ,
+which also contains more information about this setting.
+
+.SH BUGS
+
+Bugs should be reported to the author (see below) or via the issue tracker on
+GitHub.
+
+.SH AUTHORS
+
+reredirect was mainly written by Jérôme Pouiller <jezz@sysmic.org>. You can
+contact hom for any questions or bug reports.
+
+reredirect (and especially all ptrace layer) is based on reptyr programm. reptyr 
+was written by Nelson Elhage <nelhage@nelhage.com>.
+
+.SH HOMEPAGE
+
+.URL http://github.com/jerome-pouiller/reredirect
+
