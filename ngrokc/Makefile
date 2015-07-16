@@ -10,12 +10,11 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=ngrokc
 PKG_VERSION:=1.0
 PKG_RELEASE:=1
-PKG_REV:=a340cc5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_REV).tar.bz2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
-PKG_REV=a340cc5
+PKG_REV=bd404c8
 PKG_SOURCE_VERSION:=$(PKG_REV)
 PKG_SOURCE_URL:=https://github.com/dosgo/ngrok-c.git
 
@@ -38,17 +37,12 @@ define Build/Configure
 	echo "#ifndef __UCLIBC__" >> $(PKG_BUILD_DIR)/sendmsg.h
 	echo "#include <sys/select.h>" >> $(PKG_BUILD_DIR)/sendmsg.h
 	echo "#endif" >> $(PKG_BUILD_DIR)/sendmsg.h
-	sed -i 's/CC=g++//g'  $(PKG_BUILD_DIR)/build.sh
-	sed -i 's/libpolarssl-linux.a/-lpolarssl/g'  $(PKG_BUILD_DIR)/build.sh
 endef
 
-define Build/Compile
-	cd $(PKG_BUILD_DIR) && CC=$(TARGET_CROSS)g++ ./build.sh
-endef
 
 define Package/ngrokc/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build/ngrokc $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ngrokc $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,ngrokc))
