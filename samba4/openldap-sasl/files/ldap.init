@@ -1,0 +1,81 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2009-2011 OpenWrt.org
+
+START=51
+USE_PROCD=1
+
+CONFFILE=/var/etc/slapd.conf
+CLNTCONF=/var/etc/ldap.conf
+DATADIR=/etc/openldap/data
+NSSWITCH=/var/etc/nsswitch.conf
+
+add_line() {
+	echo >>$CONFFILE -e $1
+}
+
+start_server() {
+        config_get enabled  $1 enabled   "0"
+	config_get serverid $1 serverid "1"
+	config_get basedn   $1 basedn   "dc=local,dc=net"
+
+	[ "$enabled" -eq "1" ] && {
+		mkdir -p /var/etc
+		mkdir -p /var/run
+
+		[ -f /etc/krb5.keytab ] && {
+			KLIST=`klist -k /etc/krb5.keytab`
+			PRINC=${KLIST##*ldap/}
+			SASLREALM=${PRINC##*@}
+			SASLHOST=${PRINC%%@*}
+		}
+
+		[ -z $SASLREALM ] || {
+			SASLREALM="sasl-realm\t$SASLREALM"
+			SASLHOST="sasl-host\t$SASLHOST"
+		}
+
+		sed -e "s#|BASEDN|#$basedn#g" \
+		    -e "s#|DATADIR|#$DATADIR#g" \
+		    -e "s#|SERVERID|#$serverid#g" \
+		    -e "s#|SASLHOST|#$SASLHOST#g" \
+		    -e "s#|SASLREALM|#$SASLREALM#g" \
+		    /etc/openldap/slapd.conf.template > $CONFFILE
+		chmod 600 $CONFFILE
+
+		[ -d $DATADIR ] || mkdir -p $DATADIR
+
+		procd_open_instance
+		procd_set_param command /usr/sbin/slapd -d 0 -s 0 -h "ldapi:/// ldap://" -f $CONFFILE 
+		procd_set_param respawn
+		procd_close_instance
+	}
+}
+
+reload_service() {
+	restart_service
+}
+
+service_triggers() {
+	procd_add_reload_trigger "ldap"
+}
+
+service_started() {
+	tries=5
+	while [ $tries -gt 0 -a ! -S /var/run/ldapi ]; do
+		sleep 1
+		tries=$(( $tries - 1 ))
+	done
+
+	echo -e "URI\tldapi:///" >$CLNTCONF
+	chmod 644 $CLNTCONF
+	sed -i -e "s/passwd:files$/passwd:files ldap/g" -e "s/group:files$/group:files ldap/g" $NSSWITCH
+}
+
+start_service() {
+	config_load ldap
+	config_foreach  start_server server
+}
+
+stop_service() {
+	sed -i -e "s/passwd:files ldap$/passwd:files/g" -e "s/group:files ldap$/group:files/g" $NSSWITCH
+}
