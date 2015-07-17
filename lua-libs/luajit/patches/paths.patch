@@ -1,0 +1,30 @@
+--- a/src/luaconf.h	2012-02-19 20:51:28.533499147 +0400
++++ b/src/luaconf.h	2012-02-19 20:41:06.333521117 +0400
+@@ -35,13 +35,13 @@
+ #ifndef LUA_LMULTILIB
+ #define LUA_LMULTILIB	"lib"
+ #endif
+-#define LUA_LROOT	"/usr/local"
+-#define LUA_LUADIR	"/lua/5.1/"
++#define LUA_LROOT	"/usr/"
++#define LUA_LUADIR	"/lua/"
+ #define LUA_LJDIR	"/luajit-2.0.4/"
+ 
+ #ifdef LUA_ROOT
+ #define LUA_JROOT	LUA_ROOT
+-#define LUA_RLDIR	LUA_ROOT "/share" LUA_LUADIR
++#define LUA_RLDIR	LUA_ROOT "/lib" LUA_LUADIR
+ #define LUA_RCDIR	LUA_ROOT "/" LUA_MULTILIB LUA_LUADIR
+ #define LUA_RLPATH	";" LUA_RLDIR "?.lua;" LUA_RLDIR "?/init.lua"
+ #define LUA_RCPATH	";" LUA_RCDIR "?.so"
+@@ -51,8 +51,8 @@
+ #define LUA_RCPATH
+ #endif
+ 
+-#define LUA_JPATH	";" LUA_JROOT "/share" LUA_LJDIR "?.lua"
+-#define LUA_LLDIR	LUA_LROOT "/share" LUA_LUADIR
++#define LUA_JPATH	";" LUA_JROOT "/lib" LUA_LJDIR "?.lua"
++#define LUA_LLDIR	LUA_LROOT "/lib" LUA_LUADIR
+ #define LUA_LCDIR	LUA_LROOT "/" LUA_LMULTILIB LUA_LUADIR
+ #define LUA_LLPATH	";" LUA_LLDIR "?.lua;" LUA_LLDIR "?/init.lua"
+ #define LUA_LCPATH1	";" LUA_LCDIR "?.so"

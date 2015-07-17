@@ -1,0 +1,16 @@
+diff -Naur a/src/lj_arch.h b/src/lj_arch.h
+--- a/src/lj_arch.h	2015-07-17 13:02:41.633595900 +0200
++++ b/src/lj_arch.h	2015-07-17 12:59:11.000000000 +0200
+@@ -339,9 +339,9 @@
+ #error "No support for PowerPC 64 bit mode"
+ #endif
+ #elif LJ_TARGET_MIPS
+-#if defined(__mips_soft_float)
+-#error "No support for MIPS CPUs without FPU"
+-#endif
++//#if defined(__mips_soft_float)
++//#error "No support for MIPS CPUs without FPU"
++//#endif
+ #if defined(_LP64)
+ #error "No support for MIPS64"
+ #endif
