@@ -1,5 +1,6 @@
 BINDIR = /usr/sbin
-TCDIR:=$(BUILD_DIR)/iproute2*/*
+#TCDIR:=$(BUILD_DIR)/iproute2*/*
+TCDIR:=$(BUILD_DIR)/$(shell ls $(BUILD_DIR)| grep -E -m 1 ^iproute2)/*
 
 #The ncurses library only needed if we remove the ONLYBG switch
 #below.  Mostly for debug
