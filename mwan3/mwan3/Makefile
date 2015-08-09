@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=mwan3-simple
+PKG_NAME:=mwan3
 PKG_VERSION:=1.6
 PKG_RELEASE:=2
 PKG_MAINTAINER:=Jeroen Louwes <jeroen.louwes@gmail.com>
@@ -15,31 +15,31 @@ PKG_LICENSE:=GPLv2
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/mwan3-simple
+define Package/mwan3
    SECTION:=net
    CATEGORY:=Network
    SUBMENU:=Routing and Redirection
-   DEPENDS:=+ip +ipset +iptables +iptables-mod-conntrack-extra +iptables-mod-ipopt
+   DEPENDS:=+!PACKAGE_ip-full:ip +ipset +iptables +iptables-mod-conntrack-extra +iptables-mod-ipopt
    TITLE:=Multiwan hotplug script with connection tracking support
    MAINTAINER:=Jeroen Louwes <jeroen.louwes@gmail.com>
    PKGARCH:=all
 endef
 
-define Package/mwan3-simple/description
+define Package/mwan3/description
 Hotplug script which makes configuration of multiple WAN interfaces simple
 and manageable. With loadbalancing/failover support for up to 250 wan
 interfaces, connection tracking and an easy to manage traffic ruleset.
 endef
 
-define Package/mwan3-simple/conffiles
+define Package/mwan3/conffiles
 /etc/config/mwan3
 endef
 
 define Build/Compile
 endef
 
-define Package/mwan3-simple/install
+define Package/mwan3/install
 $(CP) ./files/* $(1)
 endef
 
-$(eval $(call BuildPackage,mwan3-simple))
+$(eval $(call BuildPackage,mwan3))
