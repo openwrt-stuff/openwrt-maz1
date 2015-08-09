@@ -1,0 +1,15 @@
+choice
+	prompt "Selected SSL library"
+	default N2N_POLARSSL
+
+	config N2N_POLARSSL
+		bool "PolarSSL"
+
+	config N2N_OPENSSL
+		bool "OpenSSL"
+
+endchoice
+
+config N2N_IPROUTE2
+        bool "iproute2 support"
+        default n
