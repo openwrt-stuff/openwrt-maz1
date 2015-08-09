@@ -36,7 +36,7 @@ define Package/redsocks2-alt
 	CATEGORY:=Network
 	TITLE:=Redirect any TCP connection to a SOCKS or HTTPS proxy server
 	URL:=https://github.com/semigodking/redsocks
-	DEPENDS:=+libevent2 +libopenssl
+	DEPENDS:=+libevent2 +REDSOCKS2_POLARSSL:libpolarssl +REDSOCKS2_OPENSSL:libopenssl
 endef
 
 define Package/redsocks2-alt/description
@@ -45,12 +45,18 @@ The name is changed to be REDSOCKS2 since this release to distinguish with origi
 This variant is useful for anti-GFW (Great Fire Wall).
 endef
 
+define Package/redsocks2-alt/config
+	source "$(SOURCE)/Config.in"
+endef
 
 define Build/Configure
 	$(CP) $(PKG_BUILD_DIR)/../$(_PKG_NAME)-$(PKG_VERSION)/* $(PKG_BUILD_DIR)
 	$(call Build/Configure/Default)
 endef
 
+define Build/Compile
+	$(call Build/Compile/Default,$(if $(CONFIG_REDSOCKS2_POLARSSL),USE_CRYPTO_POLARSSL=true))
+endef
 
 define Package/redsocks2-alt/conffiles
 /etc/config/redsocks2
