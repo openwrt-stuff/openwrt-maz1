@@ -25,7 +25,7 @@ define Package/n2n-edge
   URL:=http://www.ntop.org/n2n/
   SUBMENU:=VPN
   DEPENDS:=+libpthread +kmod-tun +libopenssl +resolveip +N2N_POLARSSL:libpolarssl +N2N_OPENSSL:libopenssl \
-	+N2N_IPROUTE2:iproute2
+	+N2N_IPROUTE2:ip-full
 endef
 
 define Package/n2n-supernode
