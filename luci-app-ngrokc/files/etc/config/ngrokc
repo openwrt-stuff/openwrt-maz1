@@ -1,4 +1,7 @@
-
+config servers 'tunnel_mobi'
+	option host 'tunnel.mobi'
+	option port '44433'
+	
 config servers 'tunnel_org_cn'
 	option host 'tunnel.org.cn'
 	option port '4443'
@@ -9,7 +12,7 @@ config servers 'phiui_com'
 
 config tunnel 'tunnel1'
 	option enabled '0'
-	option server 'tunnel_org_cn'
+	option server 'tunnel_mobi'
 	option type 'http'
 	option lport '80'
 	option dname 'openwrt'
