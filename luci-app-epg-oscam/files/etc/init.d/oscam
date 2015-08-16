@@ -51,7 +51,7 @@ if  [ "$enable" == "1" -a "$interval" != "0" ]; then
 		/etc/init.d/cron restart
 	fi
 else
-	if [ "z"${oscam_cron} != "z" ] ; then
+	if [ "z${oscam_cron}" != "z" ] ; then
 		cat /etc/crontabs/root | grep -v "/etc/init.d/oscam restart" > /tmp/crontabs_oscam
 		cat /tmp/crontabs_oscam | grep -v ^$ > /etc/crontabs/root
 		/etc/init.d/cron restart
