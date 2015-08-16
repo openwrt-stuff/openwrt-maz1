@@ -135,7 +135,7 @@ if  [ "$enable" == "1"  -a  "${interval}" != "0" ]; then
 		/etc/init.d/cron restart
 	fi
 else
-	if [ "z"${epg_cron} != "z" ] ; then
+	if [ "z${epg_cron}" != "z" ] ; then
 		cat /etc/crontabs/root | grep -v "/etc/init.d/epg scheduler" > /tmp/crontabs_epg
 		cat /tmp/crontabs_epg | grep -v ^$ > /etc/crontabs/root
 		/etc/init.d/cron restart
