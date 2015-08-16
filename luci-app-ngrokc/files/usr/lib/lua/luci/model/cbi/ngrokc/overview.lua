@@ -88,6 +88,7 @@ url=tunnel:option(DummyValue, "_url", translate("URL"))
 url.template = "ngrokc/overview_value"
 url.rmempty = false
 function url.set_one(self, section)
+	local urlelement
 	local servername = self.map:get(section, "server") or ""
 	local host = UCI.get("ngrokc", servername, "host") or ""
 	local tunneltype = self.map:get(section, "type") or ""
@@ -95,14 +96,15 @@ function url.set_one(self, section)
 	local cusdom = self.map:get(section, "custom_domain") or ""
 	local rport = self.map:get(section, "rport") or ""
 	if tunneltype == "tcp" and rport ~= "" then
-		return "tcp://" .. host .. ":" .. rport 
+		urlelement = "tcp://" .. host .. ":" .. rport 
 	elseif cusdom == "1" and dname ~= "" then
-		return tunneltype .. "://" .. dname
+		urlelement = tunneltype .. "://" .. dname
 	elseif dname ~= "" then
-		return tunneltype .. "://" .. dname .. "." .. string.gsub(host, "www", "")
+		urlelement = tunneltype .. "://" .. dname .. "." .. string.gsub(host, "www", "")
 	else
-		return [[<em>]] .. translate("config error") .. [[</em>]]
+		urlelement = [[<em>]] .. translate("config error") .. [[</em>]]
 	end
+	return "<a href=\"" .. urlelement .. "\"target=\"_blank\">" .. urlelement .. "</a>"
 end
 
 --status=tunnel:option(DummyValue, "_status", translate("Status"))
