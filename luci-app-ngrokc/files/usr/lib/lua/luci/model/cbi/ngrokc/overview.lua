@@ -13,6 +13,13 @@ local CTRL = require "luci.controller.ngrokc"
 local HTTP = require "luci.http"
 local UCI  = (require "luci.model.uci").cursor()
 
+main=m:section(NamedSection, "main", "ngrokc", translate("Main Settings"))
+main.addremove=false
+main.anonymous=true
+check_periodcally=main:option(Flag, "check_periodcally", translate("Check periodically"))
+check_interval=main:option(Value, "check_interval", translate("Check interval"), translate("Second(s)"))
+check_interval:depends("check_periodcally", "1")
+
 servers=m:section(TypedSection, "servers", translate("Servers"))
 servers.template = "cbi/tblsection"
 servers.anonymous = false
@@ -106,9 +113,5 @@ function url.set_one(self, section)
 	end
 	return "<a href=\"" .. urlelement .. "\"target=\"_blank\">" .. urlelement .. "</a>"
 end
-
---status=tunnel:option(DummyValue, "_status", translate("Status"))
---status.template = "ngrokc/overview_value"
---status.rmempty = false
 
 return m

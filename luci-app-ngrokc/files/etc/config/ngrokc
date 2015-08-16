@@ -1,7 +1,8 @@
-config servers 'tunnel_mobi'
-	option host 'tunnel.mobi'
-	option port '44433'
-	
+
+config ngrokc 'main'
+	option check_periodcally '1'
+	option check_interval '600'
+
 config servers 'tunnel_org_cn'
 	option host 'tunnel.org.cn'
 	option port '4443'
@@ -11,8 +12,14 @@ config servers 'phiui_com'
 	option port '4443'
 
 config tunnel 'tunnel1'
-	option enabled '0'
-	option server 'tunnel_mobi'
 	option type 'http'
 	option lport '80'
-	option dname 'openwrt'
+	option enabled '1'
+	option server 'tunnel_mobi'
+	option custom_domain '0'
+	option dname 'openwrt-maz1-home'
+
+config servers 'tunnel_mobi'
+	option host 'tunnel.mobi'
+	option port '44433'
+

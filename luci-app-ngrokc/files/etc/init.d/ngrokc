@@ -14,6 +14,7 @@ list_servers() {
 }
 
 list_tunnels() {
+	echo $1 >> /tmp/ngrokc/ngrokc.list
   config_get_bool enabled "$1" 'enabled'
   config_get type "$1" 'type'
 	config_get lhost "$1" 'lhost'
@@ -35,6 +36,7 @@ list_tunnels() {
     CMD_EXIST=`busybox ps|grep Profile:${1}|grep -v grep`
     [ -z "${CMD_EXIST}" ] && \
     exec /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>&1 >/dev/null &
+	echo  $! > /tmp/ngrokc/${1}.pid
     #exec $STDBUF /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>/dev/null 1>/tmp/ngrokc/${1}.log & 
   fi
 }
@@ -45,10 +47,12 @@ get_servarg() {
 
 start() {
 	mkdir -p /tmp/ngrokc
+	touch /tmp/ngrokc/running
 	# [ -f /usr/lib/coreutils/libstdbuf.so ] && STDBUF="stdbuf -oL " || STDBUF=""
 	config_load 'ngrokc'
 	config_foreach list_servers 'servers'
 	config_foreach list_tunnels 'tunnel'
+	set_crontab
 }
 
 stop() {
@@ -60,4 +64,26 @@ stop() {
 boot() {
 	sleep 10
 	start
+}
+
+set_crontab() {
+	[ -f /etc/crontabs/root ] || touch /etc/crontabs/root
+	interval=`uci get ngrokc.main.check_interval`
+	ngrokc_cron=`cat /etc/crontabs/root | grep "/etc/init.d/ngrokc start"`
+	if uci get ngrokc.main.check_periodcally ; then
+		ngrokc_new="*/${interval} * * * * /etc/init.d/ngrokc start"
+		if [ "z${ngrokc_cron}" != "z${ngrokc_new}" ] ; then
+			cat /etc/crontabs/root | grep -v "/etc/init.d/ngrokc start" > /tmp/crontabs_ngrokc
+		 	echo "" >> /tmp/crontabs_oscam
+			echo "*/${interval} * * * * /etc/init.d/ngrokc start" >> /tmp/crontabs_ngrokc
+			cat /tmp/crontabs_ngrokc | grep -v ^$ > /etc/crontabs/root
+			/etc/init.d/cron restart
+		fi
+	else
+		if [ "z""${ngrokc_cron}" != "z" ] ; then
+			cat /etc/crontabs/root | grep -v "/etc/init.d/ngrokc start" > /tmp/crontabs_ngrokc
+			cat /tmp/crontabs_ngrokc | grep -v ^$ > /etc/crontabs/root
+			/etc/init.d/cron restart
+		fi
+	fi
 }

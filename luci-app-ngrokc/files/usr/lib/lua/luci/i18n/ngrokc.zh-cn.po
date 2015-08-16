@@ -54,3 +54,12 @@ msgstr "通道"
 
 msgid "Details"
 msgstr "详情"
+
+msgid "Main Settings"
+msgstr "主要设置"
+
+msgid "Check periodically"
+msgstr "周期性检查"
+
+msgid "Check interval"
+msgstr "检查间隔"
