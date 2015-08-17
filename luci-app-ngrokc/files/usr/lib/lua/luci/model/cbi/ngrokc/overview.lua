@@ -16,9 +16,10 @@ local UCI  = (require "luci.model.uci").cursor()
 main=m:section(NamedSection, "main", "ngrokc", translate("Main Settings"))
 main.addremove=false
 main.anonymous=true
-check_periodcally=main:option(Flag, "check_periodcally", translate("Check periodically"))
-check_interval=main:option(Value, "check_interval", translate("Check interval"), translate("Second(s)"))
-check_interval:depends("check_periodcally", "1")
+--check_periodcally=main:option(Flag, "check_periodcally", translate("Check periodically"))
+check_interval=main:option(Value, "check_interval", translate("Check interval"), translate("Second(s). Set to 0 if you don't want to check"))
+check_interval.addremove = false
+--check_interval:depends("check_periodcally", "1")
 
 servers=m:section(TypedSection, "servers", translate("Servers"))
 servers.template = "cbi/tblsection"

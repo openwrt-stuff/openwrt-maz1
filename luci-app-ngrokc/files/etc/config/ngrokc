@@ -1,7 +1,6 @@
 
 config ngrokc 'main'
-	option check_periodcally '1'
-	option check_interval '600'
+	option check_interval '0'
 
 config servers 'tunnel_org_cn'
 	option host 'tunnel.org.cn'

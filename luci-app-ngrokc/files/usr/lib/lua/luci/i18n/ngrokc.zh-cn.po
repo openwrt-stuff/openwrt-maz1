@@ -58,8 +58,8 @@ msgstr "详情"
 msgid "Main Settings"
 msgstr "主要设置"
 
-msgid "Check periodically"
-msgstr "周期性检查"
-
 msgid "Check interval"
 msgstr "检查间隔"
+
+msgid ""Second(s). Set to 0 if you don't want to check""
+msgstr "单位秒。设为0可禁止每隔一段时间检查。"

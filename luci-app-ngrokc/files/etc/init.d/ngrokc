@@ -25,18 +25,19 @@ list_tunnels() {
 	config_get dname "$1" 'dname'
 	[ -z "$lhost" ] && lhost="127.0.0.1"
   if [ "$enabled" = 1 ]; then
-    TUNNEL_PARAMS=" -AddTun[Type:${type},Lhost:${lhost},Lport:${lport}"
+    TUNNEL_PARAMS=" -AddTun[Profile:${1},Type:${type},Lhost:${lhost},Lport:${lport}"
     [ "z""$custom_domain" = "z1" ] && DTYPE="Hostname" || DTYPE="Sdname"
     [ ${type} = "tcp" ] && \
 	TUNNEL_PARAMS=${TUNNEL_PARAMS}",Rport:${rport}," || \
-	TUNNEL_PARAMS=${TUNNEL_PARAMS}",${DTYPE}:${dname},"
-    TUNNEL_PARAMS=${TUNNEL_PARAMS}"Profile:${1}]"
+	TUNNEL_PARAMS=${TUNNEL_PARAMS}",${DTYPE}:${dname}"
+    TUNNEL_PARAMS=${TUNNEL_PARAMS}"]"
     SERVER_PARAMS=`get_servarg $server`
     echo $server" : ngrokc "$SERVER_PARAMS $TUNNEL_PARAMS
-    CMD_EXIST=`busybox ps|grep Profile:${1}|grep -v grep`
-    [ -z "${CMD_EXIST}" ] && \
-    exec /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>&1 >/dev/null &
-	echo  $! > /tmp/ngrokc/${1}.pid
+    CMD_EXIST=`busybox ps -w -w|grep "Profile:${1}" |grep -v grep`
+    if [ "z""${CMD_EXIST}" = "z" ] ; then
+	exec /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>&1 >/dev/null & 
+	echo  $! > /tmp/ngrokc/${1}.pid 
+    fi
     #exec $STDBUF /usr/bin/ngrokc $SERVER_PARAMS $TUNNEL_PARAMS 2>/dev/null 1>/tmp/ngrokc/${1}.log & 
   fi
 }
@@ -70,7 +71,7 @@ set_crontab() {
 	[ -f /etc/crontabs/root ] || touch /etc/crontabs/root
 	interval=`uci get ngrokc.main.check_interval`
 	ngrokc_cron=`cat /etc/crontabs/root | grep "/etc/init.d/ngrokc start"`
-	if uci get ngrokc.main.check_periodcally ; then
+	if [ "${interval}" != "0" ] ; then
 		ngrokc_new="*/${interval} * * * * /etc/init.d/ngrokc start"
 		if [ "z${ngrokc_cron}" != "z${ngrokc_new}" ] ; then
 			cat /etc/crontabs/root | grep -v "/etc/init.d/ngrokc start" > /tmp/crontabs_ngrokc
