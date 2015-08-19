@@ -112,7 +112,7 @@ function url.set_one(self, section)
 	else
 		urlelement = [[<em>]] .. translate("config error") .. [[</em>]]
 	end
-	return "<a href=\"" .. urlelement .. "\"target=\"_blank\">" .. urlelement .. "</a>"
+	return "<a href=\"" .. urlelement .. "\" target=\"_blank\">" .. urlelement .. "</a>"
 end
 
 return m
