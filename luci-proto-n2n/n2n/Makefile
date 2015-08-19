@@ -41,6 +41,8 @@ define Package/n2n-edge/config
 	source "$(SOURCE)/Config.in"
 endef
 
+N2N_SED=sed -i
+
 ifeq ($(CONFIG_N2N_POLARSSL),y)
   N2N_SED+= -e 's/N2N_OPTION_POLARSSL:="no"/N2N_OPTION_POLARSSL:="yes"/g'
 endif
@@ -49,8 +51,12 @@ ifeq ($(CONFIG_N2N_IPROUTE2),y)
   N2N_SED+= -e 's/N2N_HAVE_IPROUTE2:="no"/N2N_HAVE_IPROUTE2:="yes"/g'
 endif
 
+ifeq ($(N2N_SED),sed -i)
+  N2N_SED:=true
+endif
+
 define Build/Compile
-	sed -i $(N2N_SED) $(PKG_BUILD_DIR)/Makefile
+	$(N2N_SED) $(PKG_BUILD_DIR)/Makefile
 	$(call Build/Compile/Default)
 endef
 
