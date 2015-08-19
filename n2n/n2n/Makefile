@@ -63,17 +63,17 @@ endef
 define Package/n2n-edge/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/edge $(1)/usr/sbin/
-	$(INSTALL_DIR) $(1)/lib/netifd/proto
-	$(INSTALL_BIN) ./files/n2n.sh $(1)/lib/netifd/proto
+	#$(INSTALL_DIR) $(1)/lib/netifd/proto
+	#$(INSTALL_BIN) ./files/n2n.sh $(1)/lib/netifd/proto
 endef
 
 define Package/n2n-supernode/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/supernode $(1)/usr/sbin/
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/n2n-supernode.init $(1)/etc/init.d/n2n
-	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_DATA) ./files/n2n-supernode.config $(1)/etc/config/n2n
+	#$(INSTALL_DIR) $(1)/etc/init.d
+	#$(INSTALL_BIN) ./files/n2n-supernode.init $(1)/etc/init.d/n2n
+	#$(INSTALL_DIR) $(1)/etc/config
+	#$(INSTALL_DATA) ./files/n2n-supernode.config $(1)/etc/config/n2n
 endef
 
 $(eval $(call BuildPackage,n2n-edge))
